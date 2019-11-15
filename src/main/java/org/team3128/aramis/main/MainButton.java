@@ -62,11 +62,10 @@ import java.io.OutputStream;
     // - Mason Holst, "Helpful Reminders", published November 2019
 
 public class MainButton extends NarwhalRobot {
-    public TalonSRX t;
+    //public TalonSRX t;
     public ListenerManager lm;
     public Joystick j;
-    private DriveCommandRunning dcm;
-    private TankDrive td;
+    //private TankDrive td;
 
     public SRXTankDrive tankDrive;
     public TalonSRX rightDriveLeader;
@@ -77,7 +76,7 @@ public class MainButton extends NarwhalRobot {
 	@Override
 	protected void constructHardware()
 	{
-        j = new Joystick(2);
+        j = new Joystick(0);
         lm = new ListenerManager(j);
         addListenerManager(lm);
        // t = new TalonSRX(11);
@@ -88,19 +87,11 @@ public class MainButton extends NarwhalRobot {
         leftDriveLeader = new TalonSRX(13);
         leftDriveFollower = new VictorSPX(5);
 
-        rightDriveLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.CAN_TIMEOUT);
+        //rightDriveLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.CAN_TIMEOUT);
         rightDriveFollower.set(ControlMode.Follower, rightDriveLeader.getDeviceID());
 
-        leftDriveLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.CAN_TIMEOUT);
+        //leftDriveLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.CAN_TIMEOUT);
         leftDriveFollower.set(ControlMode.Follower, leftDriveLeader.getDeviceID());
-
-        double wheelCirc = 13.21 * Length.in;
-        //double wheelBase = 31.5 * Length.in; 5 feet
-        //double wheelBase = 32.25 * Length.in; 4 feet
-        double wheelBase = 32.3 * Length.in;
-        int robotFreeSpeed = 3700;
-
-        SRXTankDrive.initialize(leftDriveLeader, rightDriveLeader, wheelCirc, wheelBase, robotFreeSpeed);
 
         leftDriveLeader.setInverted(false);
         leftDriveFollower.setInverted(false);
@@ -108,14 +99,12 @@ public class MainButton extends NarwhalRobot {
         rightDriveLeader.setInverted(true);
         rightDriveFollower.setInverted(true);
 
-        leftDriveLeader.setSensorPhase(true);
-        rightDriveLeader.setSensorPhase(true);
+        SRXTankDrive.initialize(leftDriveLeader, rightDriveLeader, 13.21*Length.in, 32.3 * Length.in, 3700);
+
+        //leftDriveLeader.setSensorPhase(true);
+        //rightDriveLeader.setSensorPhase(true);
 
         tankDrive = SRXTankDrive.getInstance();
-        tankDrive.setLeftSpeedScalar(1.0);
-        tankDrive.setRightSpeedScalar(.983);
-        
-        
     }
     
     @Override
@@ -131,7 +120,7 @@ public class MainButton extends NarwhalRobot {
 		lm.nameControl(ControllerExtreme3D.THROTTLE, "Throttle");		
 
         lm.addMultiListener(()-> {
-            td.arcadeDrive(
+            tankDrive.arcadeDrive(
                 -0.7 * RobotMath.thresh(lm.getAxis("MoveTurn"), 0.1),
                 -1.0 * RobotMath.thresh(lm.getAxis("MoveForwards"), 0.1),
                 -1.0 * lm.getAxis("Throttle"),
@@ -140,26 +129,9 @@ public class MainButton extends NarwhalRobot {
         		
           //  td.arcadeDrive(joyX, joyY, throttle, fullSpeed);
         
-    }, "MoveTurn", "MoveForward", "Throttle");
+        }, "MoveTurn", "MoveForwards", "Throttle");
     
-        lm.nameControl(new Button(11), "moveFoward");
-        lm.addButtonDownListener("moveForward", ()->
-        {
-            t.set(ControlMode.PercentOutput, 100);
-        });
-        lm.addButtonUpListener("moveForward", ()->
-        {
-            t.set(ControlMode.PercentOutput, 0);
-        });
-        lm.nameControl(new Button(12), "moveBackward");
-        lm.addButtonDownListener("moveBackward", ()->
-        {
-            t.set(ControlMode.PercentOutput, -100);
-        });
-        lm.addButtonUpListener("moveBackward", ()->
-        {
-            t.set(ControlMode.PercentOutput,0);
-        });
+        
     }
 
 
