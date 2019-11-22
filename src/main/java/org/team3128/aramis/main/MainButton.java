@@ -19,6 +19,7 @@ import org.team3128.athos.autonomous.*;
 import org.team3128.athos.util.PrebotDeepSpaceConstants;
 
 import org.team3128.common.NarwhalRobot;
+import org.team3128.common.autonomous.CmdAutoTest;
 import org.team3128.common.drive.DriveCommandRunning;
 import org.team3128.common.drive.SRXTankDrive;
 import org.team3128.common.drive.TankDrive;
@@ -109,7 +110,7 @@ public class MainButton extends NarwhalRobot {
     
     @Override
     protected void constructAutoPrograms() {
-        
+        NarwhalDashboard.addAuto("Square", new CmdAutoTest());
     }
 
 	@Override
@@ -141,7 +142,7 @@ public class MainButton extends NarwhalRobot {
 
     @Override
     protected void updateDashboard() {
-
+        
     }
 
 
