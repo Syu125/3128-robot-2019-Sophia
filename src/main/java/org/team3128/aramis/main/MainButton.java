@@ -60,38 +60,44 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 //start typing the stuff to make this a robot that isn't non-functional and bad and blank and boring and stuff thanks lol
-    // - Mason Holst, "Helpful Reminders", published November 2019
+// - Mason Holst, "Helpful Reminders", published November 2019
 
 public class MainButton extends NarwhalRobot {
-    //public TalonSRX t;
+    // public TalonSRX t;
     public ListenerManager lm;
     public Joystick j;
-    //private TankDrive td;
+    // private TankDrive td;
 
     public SRXTankDrive tankDrive;
     public TalonSRX rightDriveLeader;
     public VictorSPX rightDriveFollower;
     public TalonSRX leftDriveLeader;
     public VictorSPX leftDriveFollower;
+    public DriveCalibrationUtility dcu;
+    public Gyro gyro;
+    PIDConstants visionPID, blindPID;
 
-	@Override
-	protected void constructHardware()
-	{
+    @Override
+    protected void constructHardware() {
         j = new Joystick(0);
         lm = new ListenerManager(j);
         addListenerManager(lm);
-       // t = new TalonSRX(11);
+        // t = new TalonSRX(11);
 
+        gyro = new NavX();
+        visionPID = new PIDConstants(0, 0.02, 0.0, 0.00001);
         rightDriveLeader = new TalonSRX(15);
         rightDriveFollower = new VictorSPX(6);
 
         leftDriveLeader = new TalonSRX(13);
         leftDriveFollower = new VictorSPX(5);
 
-        //rightDriveLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.CAN_TIMEOUT);
+        // rightDriveLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+        // 0, Constants.CAN_TIMEOUT);
         rightDriveFollower.set(ControlMode.Follower, rightDriveLeader.getDeviceID());
 
-        //leftDriveLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.CAN_TIMEOUT);
+        // leftDriveLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+        // 0, Constants.CAN_TIMEOUT);
         leftDriveFollower.set(ControlMode.Follower, leftDriveLeader.getDeviceID());
 
         leftDriveLeader.setInverted(false);
@@ -100,41 +106,40 @@ public class MainButton extends NarwhalRobot {
         rightDriveLeader.setInverted(true);
         rightDriveFollower.setInverted(true);
 
-        SRXTankDrive.initialize(leftDriveLeader, rightDriveLeader, 13.21*Length.in, 32.3 * Length.in, 3700);
+        SRXTankDrive.initialize(leftDriveLeader, rightDriveLeader, 13.21 * Length.in, 32.3 * Length.in, 3700);
 
-        //leftDriveLeader.setSensorPhase(true);
-        //rightDriveLeader.setSensorPhase(true);
+        // leftDriveLeader.setSensorPhase(true);
+        // rightDriveLeader.setSensorPhase(true);
 
         tankDrive = SRXTankDrive.getInstance();
+
+        DriveCalibrationUtility.initialize(gyro, visionPID);
+        dcu = DriveCalibrationUtility.getInstance();
+
+        dcu.initNarwhalDashboard();
     }
-    
+
     @Override
     protected void constructAutoPrograms() {
         NarwhalDashboard.addAuto("Square", new CmdAutoTest());
     }
 
-	@Override
+    @Override
     protected void setupListeners() {
-        
+
         lm.nameControl(ControllerExtreme3D.TWIST, "MoveTurn");
-		lm.nameControl(ControllerExtreme3D.JOYY, "MoveForwards");
-		lm.nameControl(ControllerExtreme3D.THROTTLE, "Throttle");		
+        lm.nameControl(ControllerExtreme3D.JOYY, "MoveForwards");
+        lm.nameControl(ControllerExtreme3D.THROTTLE, "Throttle");
 
-        lm.addMultiListener(()-> {
-            tankDrive.arcadeDrive(
-                -0.7 * RobotMath.thresh(lm.getAxis("MoveTurn"), 0.1),
-                -1.0 * RobotMath.thresh(lm.getAxis("MoveForwards"), 0.1),
-                -1.0 * lm.getAxis("Throttle"),
-                 true
-            );
-        		
-          //  td.arcadeDrive(joyX, joyY, throttle, fullSpeed);
-        
+        lm.addMultiListener(() -> {
+            tankDrive.arcadeDrive(-0.7 * RobotMath.thresh(lm.getAxis("MoveTurn"), 0.1),
+                    -1.0 * RobotMath.thresh(lm.getAxis("MoveForwards"), 0.1), -1.0 * lm.getAxis("Throttle"), true);
+
+            // td.arcadeDrive(joyX, joyY, throttle, fullSpeed);
+
         }, "MoveTurn", "MoveForwards", "Throttle");
-    
-        
-    }
 
+    }
 
     @Override
     protected void teleopPeriodic() {
@@ -142,9 +147,8 @@ public class MainButton extends NarwhalRobot {
 
     @Override
     protected void updateDashboard() {
-        
-    }
 
+    }
 
     public static void main(String... args) {
         RobotBase.startRobot(MainButton::new);
