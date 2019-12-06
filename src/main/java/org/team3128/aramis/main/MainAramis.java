@@ -18,6 +18,8 @@ import org.team3128.aramis.autonomous.*;
 import org.team3128.aramis.util.PrebotDeepSpaceConstants;
 
 import org.team3128.common.NarwhalRobot;
+import org.team3128.common.autonomous.CmdAutoTest;
+import org.team3128.common.autonomous.MazeAuto;
 import org.team3128.common.drive.DriveCommandRunning;
 import org.team3128.common.drive.SRXTankDrive;
 import org.team3128.common.drive.SRXTankDrive.Wheelbase;
@@ -42,6 +44,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -65,7 +68,8 @@ public class MainAramis extends NarwhalRobot {
 
     public Joystick joystick;
     public ListenerManager lm;
-
+    public Command myCommand;
+    
     public Gyro gyro;
 
     public PIDConstants leftMotionProfilePID, rightMotionProfilePID;
@@ -100,8 +104,12 @@ public class MainAramis extends NarwhalRobot {
     String csvString = "";
 
 	@Override
-	protected void constructHardware()
+    protected void constructHardware()
 	{
+        leftDriveLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.CAN_TIMEOUT);
+        leftDriveFollower.follow(leftDriveLeader);
+        rightDriveLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, Constants.CAN_TIMEOUT);
+        leftDriveFollower.follow(rightDriveLeader);
         try {
             //file = new File("C:/log.txt"); //ooohhh
             usbFile = new File("/media/sda1/limelight-loggerification-test-1.txt"); //i wuz in a hurry so no comments sorry y'all'ses
@@ -221,6 +229,18 @@ public class MainAramis extends NarwhalRobot {
         lm.nameControl(ControllerExtreme3D.TWIST, "MoveTurn");
 		lm.nameControl(ControllerExtreme3D.JOYY, "MoveForwards");
 		lm.nameControl(ControllerExtreme3D.THROTTLE, "Throttle");		
+
+        /*lm.nameControl(new Button(7), "CmdAutoTest");
+        lm.addButtonDownListener("CmdAutoTest", ()->{
+            myCommand = new CmdAutoTest();
+            myCommand.start();
+        });*/
+        lm.nameControl(new Button(7), "MazeAuto");
+        lm.addButtonDownListener("MazeAuto", ()->{
+            myCommand = new MazeAuto();
+            myCommand.start();
+        });
+
 
         lm.addMultiListener(() -> {
             if (!driveCmdRunning.isRunning) {

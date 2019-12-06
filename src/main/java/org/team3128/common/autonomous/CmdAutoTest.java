@@ -22,4 +22,15 @@ public class CmdAutoTest extends CommandGroup{
         //CmdAutoTest cmd = new CmdAutoTest();
         //RobotBase.startRobot(CmdAutoTest::new);
     //}
-}
+}/*
+1. 125 in
+2. LEFT
+3.135 in
+4. right
+5. 136 in
+6. LEFT
+7. 130 in
+8. left
+9 right 1/4 circ
+10.spin
+*/
