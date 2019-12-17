@@ -21,7 +21,7 @@ import org.team3128.common.drive.SRXTankDrive.Wheelbase;
 import org.team3128.common.drive.calibrationutility.DriveCalibrationUtility;
 import org.team3128.common.hardware.limelight.Limelight;
 import org.team3128.common.vision.CmdHorizontalOffsetFeedbackDrive;
-import org.team3128.aramis.main.subsystems.Constants;
+import org.team3128.aramis.subsystems.Constants;
 import org.team3128.common.utility.Log;
 import org.team3128.common.utility.RobotMath;
 import org.team3128.common.utility.datatypes.PIDConstants;

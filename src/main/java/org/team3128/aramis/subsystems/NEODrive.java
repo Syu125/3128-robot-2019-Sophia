@@ -1,7 +1,7 @@
 /** 
  * @author Adham Elarabawy 
  */
-package org.team3128.athos.subsystems;
+package org.team3128.aramis.subsystems;
 
 import org.team3128.common.hardware.motor.LazyCANSparkMax;
 import org.team3128.common.generics.Threaded;

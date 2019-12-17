@@ -107,13 +107,16 @@ public class MainAthos extends NarwhalRobot {
 
         // waypoints.add(new Pose2D(0, 0, Rotation2D.fromDegrees(0)));
         // waypoints.add(new Pose2D(60 * Constants.inchesToMeters, 30 * Constants.inchesToMeters, Rotation2D.fromDegrees(45)));
-
+        waypoints.add(new Pose2D(0*Constants.inchesToMeters, 0*Constants.inchesToMeters, Rotation2D.fromDegrees(0)));
+        waypoints.add(new Pose2D(35*Constants.inchesToMeters, 71*Constants.inchesToMeters, Rotation2D.fromDegrees(45)));
+        waypoints.add(new Pose2D(96*Constants.inchesToMeters, 76*Constants.inchesToMeters, Rotation2D.fromDegrees(45)));
+        
         // waypoints.add(new Pose2D(0, 0, Rotation2D.fromDegrees(0)));
         // waypoints.add(new Pose2D(30 * Constants.inchesToMeters, 0 * Constants.inchesToMeters, Rotation2D.fromDegrees(0)));
-        waypoints.add(new Pose2D(0, 0, Rotation2D.fromDegrees(0)));
+        //waypoints.add(new Pose2D(0, 0, Rotation2D.fromDegrees(0)));
         // waypoints.add(new Pose2D(70 * Constants.inchesToMeters, 40 * Constants.inchesToMeters, Rotation2D.fromDegrees(20)));
         // waypoints.add(new Pose2D(140 * Constants.inchesToMeters, 85 * Constants.inchesToMeters, Rotation2D.fromDegrees(45)));
-        waypoints.add(new Pose2D(0*Constants.inchesToMeters, 70*Constants.inchesToMeters, Rotation2D.fromDegrees(-45)));
+        //waypoints.add(new Pose2D(0*Constants.inchesToMeters, 70*Constants.inchesToMeters, Rotation2D.fromDegrees(-45)));
 
         trajectory = TrajectoryGenerator.generateTrajectory(waypoints, new ArrayList<TrajectoryConstraint>(), 0, 0,
                 120 * Constants.inchesToMeters, 0.5, false);
